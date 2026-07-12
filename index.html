@@ -314,6 +314,11 @@
         .offer-banner { aspect-ratio: 0.8/1; background: var(--shop-blue); border: 3px solid black; border-radius: 10px; box-shadow: inset 0 0 15px rgba(0,0,0,0.3), 0 5px 0 var(--shop-dark-blue); display: flex; flex-direction: column; align-items: center; justify-content: space-between; padding: 10px; cursor: pointer; transition: 0.1s; }
         .offer-banner:active { transform: translateY(2px); }
         .offer-banner.claimed-offer { opacity: 0.6; cursor: default; filter: grayscale(0.8); pointer-events: none; }
+        
+        /* СТИЛЬ ДЛЯ МЕГА-ОФЕРА СТАРР ДРОПІВ */
+        .mega-drop-offer { background: linear-gradient(135deg, #8b5cf6 0%, #d850ff 100%) !important; box-shadow: inset 0 0 20px rgba(255,255,255,0.4), 0 5px 0 #5b21b6 !important; animation: megaPulse 2s infinite alternate; }
+        @keyframes megaPulse { 0% { transform: scale(1); } 100% { transform: scale(1.03); } }
+        
         .offer-label { color: white; font-size: 11px; text-align: center; text-shadow: 1px 1px 0 black; background: rgba(0,0,0,0.4); width: 100%; border-radius: 5px; padding: 2px 0; }
         .offer-btn { background: var(--bs-green); border: 2px solid black; color: white; padding: 2px 8px; border-radius: 5px; font-size: 11px; margin-top: 4px; display: flex; align-items: center; justify-content: center; gap: 3px; }
 
@@ -353,6 +358,9 @@
         .flash-white { position: fixed; inset: 0; background: white; z-index: 5001; display: none; opacity: 0; pointer-events: none; }
 
         .back-btn { background: var(--bs-red); color: white; border: 3px solid black; padding: 8px 16px; border-radius: 10px; cursor: pointer; text-transform: uppercase; font-family: 'Lilita One'; }
+        
+        /* Лічильник Дропів у кутку екрану Starr Drop */
+        .drop-counter-badge { position: absolute; top: 20px; right: 20px; background: rgba(0,0,0,0.8); border: 3px solid var(--bs-gold); padding: 8px 15px; border-radius: 12px; font-size: 20px; text-shadow: 1px 1px 0 black; color: white; display: none; }
     </style>
 </head>
 <body>
@@ -395,7 +403,7 @@
         </div>
 
         <div class="bottom-container">
-            <img src="Img/image2333.png" class="starr-drop-btn" onclick="openStarrDrop()">
+            <img src="Img/image2333.png" class="starr-drop-btn" onclick="openStarrDrop(1)">
             <img src="Img/spraypack.png" style="width:75px; cursor:pointer;" onclick="openSprayPack()">
             <button class="pass-btn" onclick="showScreen('spray-pass-screen')">
                 <img src="Img/player_icon_bp_sandsoftime.png" style="position:absolute; left:5px; width:45px;">
@@ -485,6 +493,12 @@
             <h2 style="text-shadow:2px 2px 0 black; text-transform:uppercase;">МАГАЗИН</h2>
         </div>
         <div class="shop-grid">
+            <div class="offer-banner mega-drop-offer" id="mega-drop-gift-offer" onclick="claimMegaDropGift()">
+                <img src="Img/image71.png" style="width:75%; filter: drop-shadow(0 0 10px #fff);">
+                <div class="offer-label" id="mega-drop-label" style="background: rgba(239, 68, 68, 0.8); font-weight: bold; color: yellow;">10x STARR DROPS</div>
+                <div class="offer-btn" id="mega-drop-btn" style="background: #ffcc00; color: black; font-weight: bold;">БЕЗКОШТОВНО</div>
+            </div>
+            
             <div class="offer-banner" id="free-box-offer" onclick="tryOpenShopBox()">
                 <img src="Img/brawlbox.png" style="width:80%;">
                 <div class="offer-label" id="box-status-label">БЕЗКОШТОВНО</div>
@@ -524,6 +538,7 @@
     </div>
 
     <div id="starr-drop-screen">
+        <div class="drop-counter-badge" id="drop-counter-display">ЗАЛИШИЛОСЬ: 10</div>
         <h2 style="margin-bottom:30px; text-shadow: 2px 2px 0 black;">STARR DROP</h2>
         <img src="Img/image71.png" class="starr-drop-obj" id="starr-drop-img" onclick="triggerStarrDrop()">
         <div id="drop-reward" style="display:none; text-align:center;">
@@ -531,7 +546,7 @@
                 <img id="drop-res-img" src="" style="width:110px;">
             </div>
             <h3 id="drop-res-rarity" style="margin-top:15px; text-transform:uppercase;"></h3>
-            <button class="back-btn" style="margin-top:30px;" onclick="closeStarrDrop()">ОК</button>
+            <button class="back-btn" style="margin-top:30px;" onclick="handleStarrDropConfirmClick()">ОК</button>
         </div>
         <button class="back-btn" style="position:absolute; bottom:20px;" id="close-starr-btn" onclick="closeStarrDrop()">ЗАКРИТИ</button>
     </div>
@@ -614,6 +629,9 @@
         spraysData.forEach(s => { if (localStorage.getItem(`spray_locked_${s.id}`) === 'false') s.locked = false; });
         let claimedLeagueRewards = JSON.parse(localStorage.getItem('claimedLeagueRewards')) || [];
 
+        // Змінна черги для масового відкриття Дропів
+        let remainingDropsQueue = 0;
+
         class GameState {
             constructor() {
                 if (GameState.instance) return GameState.instance;
@@ -662,7 +680,7 @@
             }
         });
 
-        function updateUI() { state.notify(); checkShopTimer(); }
+        function updateUI() { state.notify(); checkShopTimer(); checkMegaGiftStatus(); }
 
         class RewardFactory {
             static generateLoot(type) {
@@ -750,7 +768,7 @@
             let r = leagueRanks[index];
             claimedLeagueRewards.push(index); localStorage.setItem('claimedLeagueRewards', JSON.stringify(claimedLeagueRewards));
             
-            if (r.isStarrDrop) openStarrDrop();
+            if (r.isStarrDrop) openStarrDrop(1);
             else if (r.rewardId) {
                 let s = spraysData.find(x => x.id === r.rewardId);
                 if (s) { s.locked = false; localStorage.setItem(`spray_locked_${s.id}`, 'false'); showLeagueRewardScene(index, r.name, r.img); }
@@ -882,7 +900,7 @@
         function claimPassReward(level, item, type) {
             localStorage.setItem(type === 'free' ? 'passFreeClaimed_' + level : 'passPaidClaimed_' + level, 'true');
             if (item.img.includes('box')) { updateQuest(6); openBoxVisually(); } 
-            else if (item.img.includes('image71')) openStarrDrop();
+            else if (item.img.includes('image71')) openStarrDrop(1);
             else if (item.isSpray) { let spray = spraysData.find(s => s.id === item.sprayId); if (spray) { spray.locked = false; localStorage.setItem(`spray_locked_${spray.id}`, 'false'); } } 
             else {
                 let amt = parseInt(item.txt) || 50;
@@ -909,7 +927,7 @@
             });
         }
 
-        function openShop() { showScreen('shop-screen'); updateQuest(2); }
+        function openShop() { showScreen('shop-screen'); updateQuest(2); checkMegaGiftStatus(); }
 
         function openBoxVisually() { 
             document.getElementById('box-opening-screen').style.display = 'flex'; 
@@ -945,10 +963,21 @@
 
         function closeBox() { document.getElementById('box-opening-screen').style.display = 'none'; }
 
-        function openStarrDrop() { 
+        // Функція відкриття Starr Drop з можливістю черги (для роздачі 10 шт)
+        function openStarrDrop(count = 1) { 
+            remainingDropsQueue = count;
+            
+            const badge = document.getElementById('drop-counter-display');
+            if (remainingDropsQueue > 1) {
+                badge.style.display = 'block';
+                badge.textContent = `ЗАЛИШИЛОСЬ: ${remainingDropsQueue}`;
+            } else {
+                badge.style.display = 'none';
+            }
+
             document.getElementById('starr-drop-screen').style.display = 'flex'; 
             document.getElementById('starr-drop-img').style.display = 'block'; 
-            document.getElementById('close-starr-btn').style.display = 'block'; 
+            document.getElementById('close-starr-btn').style.display = (remainingDropsQueue > 1) ? 'none' : 'block'; 
             document.getElementById('drop-reward').style.display = 'none'; 
         }
         
@@ -966,7 +995,52 @@
             document.getElementById('drop-border').style.borderColor = loot.isSpray ? loot.obj.color : loot.fallbackColor; 
             document.getElementById('drop-reward').style.display = 'block'; 
         }
-        function closeStarrDrop() { document.getElementById('starr-drop-screen').style.display = 'none'; }
+
+        // Обробка кліку на кнопку "ОК" всередині Starr Drop
+        function handleStarrDropConfirmClick() {
+            if (remainingDropsQueue > 1) {
+                // Якщо в черзі ще є дропи, зменшуємо лічильник і готуємо наступний дроп
+                remainingDropsQueue--;
+                const badge = document.getElementById('drop-counter-display');
+                badge.textContent = `ЗАЛИШИЛОСЬ: ${remainingDropsQueue}`;
+                
+                // Скидаємо вигляд інтерфейсу до початкового стану тапання
+                document.getElementById('drop-reward').style.display = 'none';
+                document.getElementById('starr-drop-img').style.display = 'block';
+            } else {
+                // Якщо це був останній дроп з черги
+                remainingDropsQueue = 0;
+                closeStarrDrop();
+            }
+        }
+
+        function closeStarrDrop() { 
+            document.getElementById('starr-drop-screen').style.display = 'none'; 
+            document.getElementById('drop-counter-display').style.display = 'none';
+        }
+
+        // Логіка для отримання Мега-Подарунка 10x Starr Drops
+        function claimMegaDropGift() {
+            if (localStorage.getItem('megaDropGiftClaimed') === 'true') return;
+            localStorage.setItem('megaDropGiftClaimed', 'true');
+            checkMegaGiftStatus();
+            openStarrDrop(10); // Запускаємо ланцюжок з 10 штук!
+        }
+
+        function checkMegaGiftStatus() {
+            const banner = document.getElementById('mega-drop-gift-offer');
+            const label = document.getElementById('mega-drop-label');
+            const btn = document.getElementById('mega-drop-btn');
+            if(!banner) return;
+
+            if (localStorage.getItem('megaDropGiftClaimed') === 'true') {
+                banner.classList.add('claimed-offer');
+                label.textContent = "ЗАБРАНО";
+                label.style.background = "rgba(0,0,0,0.5)";
+                label.style.color = "#aaa";
+                btn.style.display = 'none';
+            }
+        }
 
         function openSprayPack() {
             document.getElementById('spray-pack-screen').style.display = 'flex';
@@ -1002,7 +1076,7 @@
         
         function buyOffer(type, price, amount) { if (state.get('gems') >= price) { state.add('gems', -price); state.add(type, amount); } else alert("Мало гемів!"); }
         function buyBoxOffer(price) { if (state.get('gems') >= price) { state.add('gems', -price); updateQuest(6); openBoxVisually(); } else alert("Мало гемів!"); }
-        function buyStarrDropOffer(price) { if (state.get('gems') >= price) { state.add('gems', -price); openStarrDrop(); } else alert("Мало гемів!"); }
+        function buyStarrDropOffer(price) { if (state.get('gems') >= price) { state.add('gems', -price); openStarrDrop(1); } else alert("Мало гемів!"); }
 
         setInterval(checkShopTimer, 1000);
         updateUI(); 
@@ -1024,11 +1098,10 @@
 
         function playMenuMusic() {
             const music = document.getElementById('menu-music');
-            // Перевіряємо, чи музика увімкнена в налаштуваннях
             if (localStorage.getItem('musicEnabled') === 'false') return;
 
             if (music) {
-                music.volume = 0.4; // Гучність 40%
+                music.volume = 0.4;
                 music.play().then(() => {
                     console.log("Музика успішно запустилася після завантаження!");
                 }).catch(e => {
@@ -1048,7 +1121,6 @@
         }
 
         window.addEventListener('load', () => {
-            // Ініціалізуємо візуальний стан тумблера при першому завантаженні
             const musicEnabled = localStorage.getItem('musicEnabled') !== 'false';
             document.getElementById('music-toggle').checked = musicEnabled;
 
@@ -1067,10 +1139,7 @@
                     
                     setTimeout(() => {
                         loadingScreen.classList.add('fade-out');
-                        
-                        // Музика стартує ТУТ, якщо тумблер активний
                         playMenuMusic();
-
                         setTimeout(() => {
                             loadingScreen.style.display = 'none';
                         }, 600); 
