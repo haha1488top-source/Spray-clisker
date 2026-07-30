@@ -78,14 +78,12 @@
         
         .fade-out { animation: fadeOut 0.6s cubic-bezier(0.4, 0, 0.2, 1) forwards; }
         @keyframes fadeOut { to { opacity: 0; visibility: hidden; transform: scale(1.15) translateY(-20px); filter: blur(10px); } }
-        /* --------------------------- */
 
         #game-screen {
             width: 100%; height: 100%; display: flex; flex-direction: column; align-items: center;
             background: url('Img/image569.png') center/cover no-repeat fixed; position: relative;
         }
 
-        /* ПАНЕЛЬ ВАЛЮТ */
         .currency-panel { 
             position: absolute; top: 15px; left: 10px; display: flex; gap: 6px; z-index: 100; 
             max-width: calc(100% - 70px); flex-wrap: wrap; 
@@ -97,7 +95,6 @@
         .currency-icon { width: 20px; height: 20px; margin-right: 5px; object-fit: contain; }
         .currency-item span { font-size: 14px; }
 
-        /* НАЛАШТУВАННЯ */
         .settings-btn {
             position: absolute; top: 15px; right: 15px; width: 45px; height: 45px;
             cursor: pointer; z-index: 100; transition: transform 0.2s;
@@ -115,7 +112,6 @@
         }
         .settings-card h2 { margin-bottom: 20px; color: var(--bs-gold); text-transform: uppercase; }
         
-        /* СТИЛІ ДЛЯ ТУМБЛЕРА МУЗИКИ */
         .setting-row {
             display: flex; justify-content: space-between; align-items: center;
             margin: 15px 0; background: rgba(0,0,0,0.4); padding: 12px 18px;
@@ -145,12 +141,10 @@
         }
         .reset-btn:active { transform: translateY(2px); }
 
-        /* КЛІКЕР */
         .main-container { flex: 1; display: flex; justify-content: center; align-items: center; width: 100%; z-index: 10; }
         .spray-btn { width: 26vw; max-width: 170px; cursor: pointer; transition: transform 0.05s ease-out; filter: drop-shadow(0 8px 10px rgba(0,0,0,0.5)); }
         .spray-btn:active { transform: scale(0.85); }
 
-        /* ЛІВЕ МЕНЮ */
         .left-menu-container { position: absolute; left: 15px; top: 40%; transform: translateY(-50%); display: flex; flex-direction: column; gap: 12px; z-index: 50; }
         .menu-btn { width: 125px; font-size: 16px; color: white; border: 3px solid black; border-radius: 14px; padding: 10px; cursor: pointer; text-shadow: 2px 2px 0 black; box-shadow: 0 5px 0 rgba(0,0,0,0.6); text-transform: uppercase; transition: 0.1s; }
         .menu-btn:active { transform: translateY(3px); box-shadow: 0 2px 0 rgba(0,0,0,0.6); }
@@ -158,7 +152,6 @@
         .sprays-menu-btn { background: var(--bs-orange); }
         .league-btn { background: linear-gradient(180deg, #6366f1 0%, #4338ca 100%); border-color: #1e1b4b; }
 
-        /* НИЖНЯ ПАНЕЛЬ */
         .bottom-container { position: absolute; bottom: 20px; left: 15px; right: 15px; display: flex; align-items: flex-end; justify-content: space-between; z-index: 60; }
         .starr-drop-btn { width: 85px; cursor: pointer; transition: 0.1s; filter: drop-shadow(0 5px 10px rgba(0,0,0,0.3)); }
         .starr-drop-btn:active { transform: scale(0.9); }
@@ -170,10 +163,8 @@
             color: white; font-size: 15px; text-transform: uppercase; text-shadow: 2px 2px 0 black; box-shadow: 0 5px 0 rgba(0,0,0,0.6); cursor: pointer;
         }
 
-        /* СПІЛЬНІ СТИЛІ ДЛЯ ЕКРАНІВ */
         .modal-fullscreen { position: fixed; inset: 0; background: #1e1e2f; z-index: 2500; display: none; flex-direction: column; }
 
-        /* ЛІГА СПРЕЇВ */
         #league-screen { background: radial-gradient(circle, #312e81 0%, #0f172a 100%); }
         .league-stats-panel { background: rgba(0,0,0,0.4); padding: 15px; text-align: center; border-bottom: 3px solid black; }
         .league-progress-bg { width: 90%; max-width: 400px; height: 25px; background: #222; border: 3px solid #000; border-radius: 12px; margin: 10px auto; overflow: hidden; position: relative; }
@@ -193,7 +184,6 @@
         .play-btn-animated { background: #ffcc00; color: black; border: 4px solid black; border-radius: 15px; padding: 15px 80px; font-family: 'Lilita One'; font-size: 28px; text-transform: uppercase; cursor: pointer; box-shadow: 0 8px 0 #b38f00, 0 15px 20px rgba(0,0,0,0.4); transition: all 0.1s ease; }
         .play-btn-animated:active { transform: translateY(6px); box-shadow: 0 2px 0 #b38f00, 0 5px 10px rgba(0,0,0,0.4); }
 
-        /* МІНІ-ГРА СЦЕНА */
         #minigame-screen { background: #0f172a; flex-direction: column; align-items: center; justify-content: center; }
         .target-box { background: rgba(0,0,0,0.5); border: 3px solid var(--bs-gold); border-radius: 15px; padding: 10px 20px; margin: 15px 0; text-align: center; }
         .minigame-cards-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; max-width: 380px; width: 95%; margin-top: 10px; }
@@ -204,7 +194,6 @@
         .game-card.wrong { background: #ffcccc; border-color: var(--bs-red); background-image: none; }
         .game-card.revealed img, .game-card.wrong img { display: block; }
 
-        /* SPRAY PASS ТА ІНШЕ... */
         #spray-pass-screen { position: fixed; inset: 0; background: #1e1e2f; z-index: 2500; display: none; flex-direction: column; }
         .pass-tabs { display: flex; background: #111; border-bottom: 3px solid black; }
         .pass-tab { flex: 1; padding: 15px; text-align: center; color: #666; cursor: pointer; font-size: 18px; text-transform: uppercase; }
@@ -218,7 +207,6 @@
         .buy-pass-plus-btn { background: linear-gradient(180deg, #ffcc00 0%, #f57300 100%); border: 2px solid black; border-radius: 10px; padding: 5px 20px; color: black; font-size: 14px; text-transform: uppercase; margin-bottom: 10px; cursor: pointer; box-shadow: 0 4px 0 #92400e; display: flex; align-items: center; gap: 5px; position: relative; z-index: 1; }
         .buy-pass-plus-btn:active { transform: translateY(2px); box-shadow: 0 2px 0 #92400e; }
 
-        /* БАНЕР ПОКУПКИ BP */
         #pass-purchase-overlay { 
             position: fixed; inset: 0; background: rgba(0,0,0,0.85); z-index: 7000; 
             display: none; align-items: center; justify-content: center; backdrop-filter: blur(5px); 
@@ -315,7 +303,6 @@
         .offer-banner:active { transform: translateY(2px); }
         .offer-banner.claimed-offer { opacity: 0.6; cursor: default; filter: grayscale(0.8); pointer-events: none; }
         
-        /* СТИЛЬ ДЛЯ МЕГА-ОФЕРА СТАРР ДРОПІВ */
         .mega-drop-offer { background: linear-gradient(135deg, #8b5cf6 0%, #d850ff 100%) !important; box-shadow: inset 0 0 20px rgba(255,255,255,0.4), 0 5px 0 #5b21b6 !important; animation: megaPulse 2s infinite alternate; }
         @keyframes megaPulse { 0% { transform: scale(1); } 100% { transform: scale(1.03); } }
         
@@ -331,7 +318,6 @@
 
         #starr-drop-screen, #box-opening-screen, #spray-pack-screen { position: fixed; inset: 0; z-index: 4000; display: none; flex-direction: column; align-items: center; justify-content: center; }
         
-        /* --- ФОН СЦЕНИ STARR DROP (ФІОЛЕТОВО-КОСМІЧНИЙ) --- */
         #starr-drop-screen { background: radial-gradient(circle, #3a1a78 0%, #0a0314 100%); }
         
         #box-opening-screen { background: rgba(0,0,0,0.95); z-index: 5000; }
@@ -359,7 +345,6 @@
 
         .back-btn { background: var(--bs-red); color: white; border: 3px solid black; padding: 8px 16px; border-radius: 10px; cursor: pointer; text-transform: uppercase; font-family: 'Lilita One'; }
         
-        /* Лічильник Дропів у кутку екрану Starr Drop */
         .drop-counter-badge { position: absolute; top: 20px; right: 20px; background: rgba(0,0,0,0.8); border: 3px solid var(--bs-gold); padding: 8px 15px; border-radius: 12px; font-size: 20px; text-shadow: 1px 1px 0 black; color: white; display: none; }
     </style>
 </head>
@@ -504,6 +489,14 @@
                 <div class="offer-label" id="box-status-label">БЕЗКОШТОВНО</div>
                 <div class="offer-btn" id="box-status-btn">ОТРИМАТИ</div>
             </div>
+
+            <!-- ЗАМІНА: spray_alli.png на spray_crying_star.png, ціна 39 -> 49 -->
+            <div class="offer-banner" onclick="buySprayOffer(32, 49)">
+                <img src="Img/spray_crying_star.png" style="width:70%;">
+                <div class="offer-label">СПРЕЙ CRYING STAR</div>
+                <div class="offer-btn">49 <img src="Img/gems_icon.png" style="width:12px;"></div>
+            </div>
+
             <div class="offer-banner" onclick="buyOffer('blings', 10, 50)">
                 <img src="Img/icon_bling.png" style="width:70%;">
                 <div class="offer-label">50 БЛІНГІВ</div>
@@ -610,7 +603,11 @@
             { id: 27, img: 'Img/spray_brawlentines.png', rarity: 'Епічний', color: '#d850ff', locked: true },
             { id: 28, img: 'Img/SprayStarrpark.png', rarity: 'Рідкісний', color: '#5ab3ff', locked: true },
             { id: 29, img: 'Img/8bit_spray_virus.png', rarity: 'Епічний', color: '#d850ff', locked: true },
-            { id: 30, img: 'Img/spray_bp_dark_sands.png', rarity: 'Міфічний', color: '#ff4b4b', locked: true, passExclusive: true }
+            { id: 30, img: 'Img/spray_bp_dark_sands.png', rarity: 'Міфічний', color: '#ff4b4b', locked: true, passExclusive: true },
+            // ДОДАНО: spray_alli.png тепер у пулі Starr Drop (id:31)
+            { id: 31, img: 'Img/spray_alli.png', rarity: 'Епічний', color: '#d850ff', locked: true },
+            // ДОДАНО: spray_crying_star.png (id:32)
+            { id: 32, img: 'Img/spray_crying_star.png', rarity: 'Епічний', color: '#d850ff', locked: true }
         ];
 
         let quests = [
@@ -629,7 +626,6 @@
         spraysData.forEach(s => { if (localStorage.getItem(`spray_locked_${s.id}`) === 'false') s.locked = false; });
         let claimedLeagueRewards = JSON.parse(localStorage.getItem('claimedLeagueRewards')) || [];
 
-        // Змінна черги для масового відкриття Дропів
         let remainingDropsQueue = 0;
 
         class GameState {
@@ -963,7 +959,6 @@
 
         function closeBox() { document.getElementById('box-opening-screen').style.display = 'none'; }
 
-        // Функція відкриття Starr Drop з можливістю черги (для роздачі 10 шт)
         function openStarrDrop(count = 1) { 
             remainingDropsQueue = count;
             
@@ -996,19 +991,15 @@
             document.getElementById('drop-reward').style.display = 'block'; 
         }
 
-        // Обробка кліку на кнопку "ОК" всередині Starr Drop
         function handleStarrDropConfirmClick() {
             if (remainingDropsQueue > 1) {
-                // Якщо в черзі ще є дропи, зменшуємо лічильник і готуємо наступний дроп
                 remainingDropsQueue--;
                 const badge = document.getElementById('drop-counter-display');
                 badge.textContent = `ЗАЛИШИЛОСЬ: ${remainingDropsQueue}`;
                 
-                // Скидаємо вигляд інтерфейсу до початкового стану тапання
                 document.getElementById('drop-reward').style.display = 'none';
                 document.getElementById('starr-drop-img').style.display = 'block';
             } else {
-                // Якщо це був останній дроп з черги
                 remainingDropsQueue = 0;
                 closeStarrDrop();
             }
@@ -1019,12 +1010,11 @@
             document.getElementById('drop-counter-display').style.display = 'none';
         }
 
-        // Логіка для отримання Мега-Подарунка 10x Starr Drops
         function claimMegaDropGift() {
             if (localStorage.getItem('megaDropGiftClaimed') === 'true') return;
             localStorage.setItem('megaDropGiftClaimed', 'true');
             checkMegaGiftStatus();
-            openStarrDrop(10); // Запускаємо ланцюжок з 10 штук!
+            openStarrDrop(10);
         }
 
         function checkMegaGiftStatus() {
@@ -1078,11 +1068,29 @@
         function buyBoxOffer(price) { if (state.get('gems') >= price) { state.add('gems', -price); updateQuest(6); openBoxVisually(); } else alert("Мало гемів!"); }
         function buyStarrDropOffer(price) { if (state.get('gems') >= price) { state.add('gems', -price); openStarrDrop(1); } else alert("Мало гемів!"); }
 
+        function buySprayOffer(sprayId, price) {
+            let spray = spraysData.find(s => s.id === sprayId);
+            if (!spray) return;
+            if (!spray.locked) {
+                alert("У вас вже є цей спрей!");
+                return;
+            }
+            if (state.get('gems') >= price) {
+                state.add('gems', -price);
+                spray.locked = false;
+                localStorage.setItem(`spray_locked_${spray.id}`, 'false');
+                updateQuest(2);
+                alert("Спрей успішно придбано!");
+                renderSprays();
+            } else {
+                alert("Мало гемів!");
+            }
+        }
+
         setInterval(checkShopTimer, 1000);
         updateUI(); 
         updateLeagueUI(); 
 
-        // --- ЛОГІКА КЕРУВАННЯ МУЗИКОЮ ТА ТУМБЛЕРОМ ---
         function handleMusicToggle(isEnabled) {
             localStorage.setItem('musicEnabled', isEnabled);
             const music = document.getElementById('menu-music');
@@ -1127,28 +1135,28 @@
             let progress = 0;
             const loadingBar = document.getElementById('loading-progress');
             const loadingText = document.getElementById('loading-text');
-            const loadingScreen = document.getElementById('loading-screen');
 
             const interval = setInterval(() => {
-                progress += Math.floor(Math.random() * 15) + 5; 
+                progress += Math.floor(Math.random() * 12) + 5;
                 if (progress >= 100) {
                     progress = 100;
                     clearInterval(interval);
                     loadingBar.style.width = '100%';
-                    loadingText.textContent = 'ГОТОВО!';
+                    loadingText.textContent = 'Завантаження... 100%';
                     
                     setTimeout(() => {
+                        const loadingScreen = document.getElementById('loading-screen');
                         loadingScreen.classList.add('fade-out');
                         playMenuMusic();
                         setTimeout(() => {
                             loadingScreen.style.display = 'none';
-                        }, 600); 
-                    }, 400); 
+                        }, 600);
+                    }, 300);
                 } else {
                     loadingBar.style.width = progress + '%';
-                    loadingText.textContent = `ЗАВАНТАЖЕННЯ... ${progress}%`;
+                    loadingText.textContent = `Завантаження... ${progress}%`;
                 }
-            }, 120); 
+            }, 80);
         });
     </script>
 </body>
