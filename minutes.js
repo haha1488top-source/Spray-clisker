@@ -1,4 +1,4 @@
 // true - увімкнути технічну перерву (гра зупиниться на 50%)
 // false - вимкнути (гра завантажиться повністю)
 
-const isMaintenance = true;
+window.isMaintenance = true;
