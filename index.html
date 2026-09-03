@@ -404,6 +404,11 @@
         </div>
         <div class="league-stats-panel">
             <h3 style="color:var(--bs-gold); margin-bottom:5px;">РАНГ: <span id="league-rank-name" style="color:white;">БРОНЗА</span></h3>
+            
+            <div style="color: #ffedad; font-size: 16px; margin-bottom: 10px; text-shadow: 1px 1px 0 black;">
+                ⏳ Кінець сезону: <span id="league-timer-text" style="color: var(--bs-green);">Обчислення...</span>
+            </div>
+
             <p>ОЧКИ: <span id="league-pts-text">0 / 100</span></p>
             <div class="league-progress-bg">
                 <div class="league-progress-fill" id="league-progress-fill"></div>
@@ -452,6 +457,11 @@
                 <button class="back-btn" style="position:absolute; left:10px; top:10px; padding:4px 10px; z-index:10;" onclick="showScreen('game-screen')">←</button>
                 <h2 style="color:var(--bs-gold); text-shadow:2px 2px 0 black; position:relative; z-index:1;">ПІСКИ ЧАСУ</h2>
             </div>
+            
+            <div style="color: white; font-size: 15px; margin-bottom: 10px; text-shadow: 1px 1px 0 black; text-transform: uppercase;">
+                ⏳ Кінець сезону: <span id="pass-timer-text" style="color: var(--bs-green);">Обчислення...</span>
+            </div>
+
             <button id="buy-pass-btn" class="buy-pass-plus-btn" onclick="showPassPurchasePopup()">АКТИВУВАТИ ПЛЮС 139 <img src="Img/image1194.png" style="width:16px;"></button>
             <div class="token-progress-container"><div class="token-bar" id="token-bar"></div><div class="token-text" id="token-text">0 / 100</div></div>
             <div class="pass-content" id="pass-items-container"></div>
@@ -490,7 +500,6 @@
                 <div class="offer-btn" id="box-status-btn">ОТРИМАТИ</div>
             </div>
 
-            <!-- ЗАМІНА: spray_alli.png на spray_crying_star.png, ціна 39 -> 49 -->
             <div class="offer-banner" onclick="buySprayOffer(32, 49)">
                 <img src="Img/spray_crying_star.png" style="width:70%;">
                 <div class="offer-label">СПРЕЙ CRYING STAR</div>
@@ -601,12 +610,10 @@
             { id: 25, img: 'Img/Spray_yeardragon.png', rarity: 'Епічний', color: '#d850ff', locked: true, packExclusive: true },
             { id: 26, img: 'Img/spray_shelly.png', rarity: 'Рідкісний', color: '#5ab3ff', locked: true },
             { id: 27, img: 'Img/spray_brawlentines.png', rarity: 'Епічний', color: '#d850ff', locked: true },
-            { id: 28, img: 'Img/SprayStarrpark.png', rarity: 'Рідкісний', color: '#5ab3ff', locked: true },
+            { id: 28, img: 'Img/spray_propass_62_3.png', rarity: 'Ліга', color: '#ff4b4b', locked: true, isLeague: true },
             { id: 29, img: 'Img/8bit_spray_virus.png', rarity: 'Епічний', color: '#d850ff', locked: true },
             { id: 30, img: 'Img/spray_bp_dark_sands.png', rarity: 'Міфічний', color: '#ff4b4b', locked: true, passExclusive: true },
-            // ДОДАНО: spray_alli.png тепер у пулі Starr Drop (id:31)
             { id: 31, img: 'Img/spray_alli.png', rarity: 'Епічний', color: '#d850ff', locked: true },
-            // ДОДАНО: spray_crying_star.png (id:32)
             { id: 32, img: 'Img/spray_crying_star.png', rarity: 'Епічний', color: '#d850ff', locked: true }
         ];
 
@@ -713,7 +720,8 @@
             { name: "БРОНЗА", minPts: 0, maxPts: 100, penalty: 0, img: 'Img/bronze.png', rewardId: 12 },
             { name: "СРІБЛО", minPts: 100, maxPts: 300, penalty: 10, img: 'Img/spray_silveleague.png', rewardId: 13 },
             { name: "ДІАМАНТ", minPts: 300, maxPts: 600, penalty: 15, img: 'Img/spraydaimant_league.png', rewardId: 14 },
-            { name: "МАЙСТЕР", minPts: 600, maxPts: 1000, penalty: 20, img: 'Img/image71.png', isStarrDrop: true } 
+            { name: "МАЙСТЕР", minPts: 600, maxPts: 1000, penalty: 20, img: 'Img/spray_propass_62_3.png', rewardId: 28 },
+            { name: "ЛЕГЕНДА", minPts: 1000, maxPts: 1500, penalty: 25, img: 'Img/image71.png', isStarrDrop: true } 
         ];
 
         let minigameTimer; let minigameTimeLeft = 60; let targetsFound = 0; let targetSprayObj = null;
@@ -1127,6 +1135,89 @@
                 });
             }
         }
+
+        // --- ЛОГІКА ТАЙМЕРА ЛІГИ ---
+        function initLeagueTimer() {
+            const DURATION_MS = (14 * 24 * 60 * 60 * 1000) + (17 * 60 * 60 * 1000); 
+            
+            let seasonEnd = localStorage.getItem('leagueSeasonEnd');
+            
+            if (!seasonEnd) {
+                seasonEnd = Date.now() + DURATION_MS;
+                localStorage.setItem('leagueSeasonEnd', seasonEnd.toString());
+            } else {
+                seasonEnd = parseInt(seasonEnd);
+            }
+
+            const timerElement = document.getElementById('league-timer-text');
+
+            function updateTimer() {
+                const now = Date.now();
+                const diff = seasonEnd - now;
+
+                if (diff <= 0) {
+                    timerElement.textContent = "СЕЗОН ЗАВЕРШЕНО!";
+                    timerElement.style.color = "var(--bs-red)";
+                    return;
+                }
+
+                const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+                const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                const mins = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+                const secs = Math.floor((diff % (1000 * 60)) / 1000);
+
+                timerElement.textContent = `${days}д ${hours}г ${mins}хв ${secs}с`;
+            }
+
+            updateTimer();
+            setInterval(updateTimer, 1000);
+        }
+
+        initLeagueTimer();
+        // ----------------------------
+
+        // --- ЛОГІКА ТАЙМЕРА SPRAY PASS ---
+        function initPassTimer() {
+            // 14 днів і 23 години у мілісекундах
+            const PASS_DURATION_MS = (14 * 24 * 60 * 60 * 1000) + (23 * 60 * 60 * 1000); 
+            
+            let passSeasonEnd = localStorage.getItem('passSeasonEnd');
+            
+            if (!passSeasonEnd) {
+                // Якщо гравець зайшов вперше
+                passSeasonEnd = Date.now() + PASS_DURATION_MS;
+                localStorage.setItem('passSeasonEnd', passSeasonEnd.toString());
+            } else {
+                passSeasonEnd = parseInt(passSeasonEnd);
+            }
+
+            const timerElement = document.getElementById('pass-timer-text');
+            if (!timerElement) return;
+
+            function updateTimer() {
+                const now = Date.now();
+                const diff = passSeasonEnd - now;
+
+                if (diff <= 0) {
+                    timerElement.textContent = "ОЧІКУЙТЕ ОНОВЛЕННЯ О 12:00!";
+                    timerElement.style.color = "var(--bs-red)";
+                    return;
+                }
+
+                const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+                const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                const mins = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+                const secs = Math.floor((diff % (1000 * 60)) / 1000);
+
+                timerElement.textContent = `${days}д ${hours}г ${mins}хв ${secs}с`;
+            }
+
+            updateTimer();
+            setInterval(updateTimer, 1000);
+        }
+
+        initPassTimer();
+        // ---------------------------------
 
         window.addEventListener('load', () => {
             const musicEnabled = localStorage.getItem('musicEnabled') !== 'false';
