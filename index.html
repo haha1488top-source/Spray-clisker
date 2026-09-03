@@ -6,8 +6,8 @@
     <title>Spray Simulator - Sands of Time Edition</title>
     <link href="https://fonts.googleapis.com/css2?family=Lilita One&display=swap" rel="stylesheet">
     
-    <!-- ПІДКЛЮЧАЄМО ФАЙЛ ЗІ СТАНОМ ТЕХНІЧНОЇ ПЕРЕРВИ -->
-    <script src="minutes.js"></script>
+    <!-- ПІДКЛЮЧАЄМО ФАЙЛ ЗІ СТАНОМ ТЕХНІЧНОЇ ПЕРЕРВИ (z ?v=2 для обходу кешу) -->
+    <script src="minutes.js?v=2"></script>
     
     <style>
         :root {
@@ -659,6 +659,7 @@
         let claimedLeagueRewards = JSON.parse(localStorage.getItem('claimedLeagueRewards')) || [];
 
         let remainingDropsQueue = 0;
+        let isOpeningDrop = false; // ЗАПОБІЖНИК ВІД СПАМУ
 
         class GameState {
             constructor() {
@@ -723,12 +724,24 @@
                         return { type: r.n, img: r.i, amount: Math.floor(Math.random()*(r.max-r.min+1))+r.min, isSpray: false };
                     
                     case 'starrDrop':
+                        // 60% шанс на ресурси, 40% на спрей
+                        const isResource = Math.random() < 0.60;
                         const lockedPool = spraysData.filter(s => s.locked && !s.isLeague && !s.packExclusive && !s.passExclusive);
-                        if(lockedPool.length > 0) {
+                        
+                        if (!isResource && lockedPool.length > 0) {
                             let win = lockedPool[Math.floor(Math.random() * lockedPool.length)];
                             return { type: 'spray', obj: win, isSpray: true };
+                        } else {
+                            // Генерація ресурсів
+                            const resChance = Math.random();
+                            if (resChance < 0.6) {
+                                return { type: 'coins', amount: Math.floor(Math.random() * 150) + 50, isSpray: false, fallbackRarity: 'Монети', fallbackColor: '#ffcc00', fallbackImg: 'Img/coin.png' };
+                            } else if (resChance < 0.9) {
+                                return { type: 'blings', amount: Math.floor(Math.random() * 30) + 10, isSpray: false, fallbackRarity: 'Блінги', fallbackColor: '#ffcc00', fallbackImg: 'Img/icon_bling.png' };
+                            } else {
+                                return { type: 'gems', amount: Math.floor(Math.random() * 5) + 1, isSpray: false, fallbackRarity: 'Геми', fallbackColor: '#4ade80', fallbackImg: 'Img/image1194.png' };
+                            }
                         }
-                        return { type: 'coins', amount: 200, isSpray: false, fallbackRarity: 'Компенсація', fallbackColor: '#ffcc00', fallbackImg: 'Img/coin.png' };
                     
                     case 'sprayPack':
                         let lockedPack = spraysData.filter(s => s.locked && s.packExclusive);
@@ -1010,6 +1023,9 @@
         }
         
         function triggerStarrDrop() {
+            if (isOpeningDrop) return; // Блокуємо повторні кліки
+            isOpeningDrop = true;
+            
             updateQuest(3);
             const loot = RewardFactory.generateLoot('starrDrop');
             
@@ -1025,6 +1041,7 @@
         }
 
         function handleStarrDropConfirmClick() {
+            isOpeningDrop = false; // Знімаємо блокування
             if (remainingDropsQueue > 1) {
                 remainingDropsQueue--;
                 const badge = document.getElementById('drop-counter-display');
@@ -1252,21 +1269,19 @@
 
             const interval = setInterval(() => {
                 
-                // Перевіряємо чи є технічна перерва (з файлу minutes.js)
-                let maintenanceMode = (typeof isMaintenance !== 'undefined' && isMaintenance === true);
+                // ПРАВИЛЬНА ПЕРЕВІРКА ТЕХНІЧНОЇ ПЕРЕРВИ
+                let maintenanceMode = (window.isMaintenance === true);
 
                 if (maintenanceMode && progress >= 50) {
-                    progress = 50; // Зупиняємо на половині
+                    progress = 50; 
                     clearInterval(interval);
                     loadingBar.style.width = '50%';
                     loadingText.textContent = 'ТЕХНІЧНА ПЕРЕРВА...';
                     loadingText.style.color = 'var(--bs-red)';
                     
-                    // Показуємо банер
                     document.getElementById('maintenance-banner').style.display = 'block';
-                    // Вимикаємо анімацію спіннера
                     document.querySelector('.hourglass-spinner').style.animation = 'none';
-                    return; // Блокуємо подальше завантаження
+                    return; 
                 }
 
                 progress += Math.floor(Math.random() * 12) + 5;
