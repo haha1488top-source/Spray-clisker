@@ -5,6 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Spray Simulator - Sands of Time Edition</title>
     <link href="https://fonts.googleapis.com/css2?family=Lilita One&display=swap" rel="stylesheet">
+    
+    <!-- ПІДКЛЮЧАЄМО ФАЙЛ ЗІ СТАНОМ ТЕХНІЧНОЇ ПЕРЕРВИ -->
+    <script src="minutes.js"></script>
+    
     <style>
         :root {
             --bs-gold: #ffcc00; --bs-green: #4ade80; --bs-orange: #f57300;
@@ -78,6 +82,21 @@
         
         .fade-out { animation: fadeOut 0.6s cubic-bezier(0.4, 0, 0.2, 1) forwards; }
         @keyframes fadeOut { to { opacity: 0; visibility: hidden; transform: scale(1.15) translateY(-20px); filter: blur(10px); } }
+
+        /* БАНЕР ТЕХНІЧНОЇ ПЕРЕРВИ */
+        #maintenance-banner {
+            display: none; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+            background: radial-gradient(circle, #ff4d4d 0%, #990000 100%);
+            border: 5px solid var(--bs-gold); border-radius: 20px; padding: 25px 15px; text-align: center;
+            z-index: 10000; box-shadow: 0 15px 40px rgba(0,0,0,0.9), 0 0 30px rgba(255, 77, 77, 0.5);
+            width: 90%; max-width: 400px;
+        }
+        #maintenance-banner h2 {
+            color: white; text-shadow: 3px 3px 0 black; margin-bottom: 15px; font-size: 30px; letter-spacing: 1px;
+        }
+        #maintenance-banner p {
+            color: #ffcc00; font-size: 16px; text-shadow: 1px 1px 0 black; line-height: 1.4;
+        }
 
         #game-screen {
             width: 100%; height: 100%; display: flex; flex-direction: column; align-items: center;
@@ -363,6 +382,12 @@
                 <div class="loading-bar-fill" id="loading-progress"></div>
             </div>
             <p class="loading-text" id="loading-text">Завантаження... 0%</p>
+        </div>
+
+        <!-- ТУТ ДОДАНО БАНЕР ТЕХ. ПЕРЕРВИ -->
+        <div id="maintenance-banner">
+            <h2>🛠 ТЕХНІЧНА ПЕРЕРВА 🛠</h2>
+            <p>Гра тимчасово недоступна. Ми працюємо над оновленням, скоро повернемось!</p>
         </div>
     </div>
     
@@ -1178,13 +1203,11 @@
 
         // --- ЛОГІКА ТАЙМЕРА SPRAY PASS ---
         function initPassTimer() {
-            // 14 днів і 23 години у мілісекундах
             const PASS_DURATION_MS = (14 * 24 * 60 * 60 * 1000) + (23 * 60 * 60 * 1000); 
             
             let passSeasonEnd = localStorage.getItem('passSeasonEnd');
             
             if (!passSeasonEnd) {
-                // Якщо гравець зайшов вперше
                 passSeasonEnd = Date.now() + PASS_DURATION_MS;
                 localStorage.setItem('passSeasonEnd', passSeasonEnd.toString());
             } else {
@@ -1228,6 +1251,24 @@
             const loadingText = document.getElementById('loading-text');
 
             const interval = setInterval(() => {
+                
+                // Перевіряємо чи є технічна перерва (з файлу minutes.js)
+                let maintenanceMode = (typeof isMaintenance !== 'undefined' && isMaintenance === true);
+
+                if (maintenanceMode && progress >= 50) {
+                    progress = 50; // Зупиняємо на половині
+                    clearInterval(interval);
+                    loadingBar.style.width = '50%';
+                    loadingText.textContent = 'ТЕХНІЧНА ПЕРЕРВА...';
+                    loadingText.style.color = 'var(--bs-red)';
+                    
+                    // Показуємо банер
+                    document.getElementById('maintenance-banner').style.display = 'block';
+                    // Вимикаємо анімацію спіннера
+                    document.querySelector('.hourglass-spinner').style.animation = 'none';
+                    return; // Блокуємо подальше завантаження
+                }
+
                 progress += Math.floor(Math.random() * 12) + 5;
                 if (progress >= 100) {
                     progress = 100;
