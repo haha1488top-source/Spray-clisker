@@ -233,7 +233,7 @@
         </div>
     </div>
 
-    <!-- Ліга, Міні-гра, Налаштування, Pass (не змінено) -->
+    <!-- Ліга, Міні-гра, Налаштування, Pass -->
     <div id="league-screen" class="modal-fullscreen">
         <div class="shop-header" style="background: var(--league-purple);"><button class="back-btn" style="position:absolute; left:10px; top:12px;" onclick="showScreen('game-screen')">←</button><h2 style="text-shadow:2px 2px 0 black; text-transform:uppercase;">ЛІГА СПРЕЇВ</h2></div>
         <div class="league-stats-panel">
@@ -412,6 +412,18 @@
         let remainingBoxesQueue = 0;
         let isOpeningDrop = false; 
         let isOpeningBox = false; // ЗАПОБІЖНИК ДЛЯ БОКСІВ
+
+        // --- ОДНОРАЗОВЕ ПРОДОВЖЕННЯ СЕЗОНІВ ДЛЯ ПОТОЧНИХ ГРАВЦІВ ---
+        if (localStorage.getItem('season_extended_9_12') !== 'true') {
+            let lEnd = localStorage.getItem('leagueSeasonEnd');
+            if (lEnd) localStorage.setItem('leagueSeasonEnd', (parseInt(lEnd) + (12 * 24 * 60 * 60 * 1000)).toString());
+            
+            let pEnd = localStorage.getItem('passSeasonEnd');
+            if (pEnd) localStorage.setItem('passSeasonEnd', (parseInt(pEnd) + (9 * 24 * 60 * 60 * 1000)).toString());
+            
+            localStorage.setItem('season_extended_9_12', 'true');
+        }
+        // ------------------------------------------------------------
 
         class GameState {
             constructor() {
@@ -832,7 +844,8 @@
         }
 
         function initLeagueTimer() {
-            const DURATION_MS = (14 * 24 * 60 * 60 * 1000) + (17 * 60 * 60 * 1000); 
+            // Змінено з 14 на 26 днів (14 + 12)
+            const DURATION_MS = (26 * 24 * 60 * 60 * 1000) + (17 * 60 * 60 * 1000); 
             let seasonEnd = localStorage.getItem('leagueSeasonEnd');
             if (!seasonEnd) { seasonEnd = Date.now() + DURATION_MS; localStorage.setItem('leagueSeasonEnd', seasonEnd.toString()); } else { seasonEnd = parseInt(seasonEnd); }
             const timerElement = document.getElementById('league-timer-text');
@@ -847,7 +860,8 @@
         initLeagueTimer();
 
         function initPassTimer() {
-            const PASS_DURATION_MS = (14 * 24 * 60 * 60 * 1000) + (23 * 60 * 60 * 1000); 
+            // Змінено з 14 на 23 дні (14 + 9)
+            const PASS_DURATION_MS = (23 * 24 * 60 * 60 * 1000) + (23 * 60 * 60 * 1000); 
             let passSeasonEnd = localStorage.getItem('passSeasonEnd');
             if (!passSeasonEnd) { passSeasonEnd = Date.now() + PASS_DURATION_MS; localStorage.setItem('passSeasonEnd', passSeasonEnd.toString()); } else { passSeasonEnd = parseInt(passSeasonEnd); }
             const timerElement = document.getElementById('pass-timer-text'); if (!timerElement) return;
