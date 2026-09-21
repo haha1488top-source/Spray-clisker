@@ -6,7 +6,7 @@
     <title>Spray Simulator - Sands of Time Edition</title>
     <link href="https://fonts.googleapis.com/css2?family=Lilita One&display=swap" rel="stylesheet">
     
-    <script src="minutes.js?v=4"></script>
+    <script src="minutes.js?v=5"></script>
     
     <style>
         :root {
@@ -233,7 +233,6 @@
         </div>
     </div>
 
-    <!-- Ліга, Міні-гра, Налаштування, Pass -->
     <div id="league-screen" class="modal-fullscreen">
         <div class="shop-header" style="background: var(--league-purple);"><button class="back-btn" style="position:absolute; left:10px; top:12px;" onclick="showScreen('game-screen')">←</button><h2 style="text-shadow:2px 2px 0 black; text-transform:uppercase;">ЛІГА СПРЕЇВ</h2></div>
         <div class="league-stats-panel">
@@ -411,19 +410,15 @@
         let remainingDropsQueue = 0;
         let remainingBoxesQueue = 0;
         let isOpeningDrop = false; 
-        let isOpeningBox = false; // ЗАПОБІЖНИК ДЛЯ БОКСІВ
+        let isOpeningBox = false;
 
-        // --- ОДНОРАЗОВЕ ПРОДОВЖЕННЯ СЕЗОНІВ ДЛЯ ПОТОЧНИХ ГРАВЦІВ ---
-        if (localStorage.getItem('season_extended_9_12') !== 'true') {
-            let lEnd = localStorage.getItem('leagueSeasonEnd');
-            if (lEnd) localStorage.setItem('leagueSeasonEnd', (parseInt(lEnd) + (12 * 24 * 60 * 60 * 1000)).toString());
-            
-            let pEnd = localStorage.getItem('passSeasonEnd');
-            if (pEnd) localStorage.setItem('passSeasonEnd', (parseInt(pEnd) + (9 * 24 * 60 * 60 * 1000)).toString());
-            
-            localStorage.setItem('season_extended_9_12', 'true');
+        // --- ТОЧНЕ ВСТАНОВЛЕННЯ ТАЙМЕРІВ ВІД ПОТОЧНОГО МОМЕНТУ ---
+        if (localStorage.getItem('force_timer_set_exact') !== 'true') {
+            localStorage.setItem('leagueSeasonEnd', (Date.now() + (12 * 24 * 60 * 60 * 1000)).toString()); // Рівно 12 днів
+            localStorage.setItem('passSeasonEnd', (Date.now() + (9 * 24 * 60 * 60 * 1000)).toString()); // Рівно 9 днів
+            localStorage.setItem('force_timer_set_exact', 'true');
         }
-        // ------------------------------------------------------------
+        // ---------------------------------------------------------
 
         class GameState {
             constructor() {
@@ -844,8 +839,7 @@
         }
 
         function initLeagueTimer() {
-            // Змінено з 14 на 26 днів (14 + 12)
-            const DURATION_MS = (26 * 24 * 60 * 60 * 1000) + (17 * 60 * 60 * 1000); 
+            const DURATION_MS = (12 * 24 * 60 * 60 * 1000); // 12 днів
             let seasonEnd = localStorage.getItem('leagueSeasonEnd');
             if (!seasonEnd) { seasonEnd = Date.now() + DURATION_MS; localStorage.setItem('leagueSeasonEnd', seasonEnd.toString()); } else { seasonEnd = parseInt(seasonEnd); }
             const timerElement = document.getElementById('league-timer-text');
@@ -860,8 +854,7 @@
         initLeagueTimer();
 
         function initPassTimer() {
-            // Змінено з 14 на 23 дні (14 + 9)
-            const PASS_DURATION_MS = (23 * 24 * 60 * 60 * 1000) + (23 * 60 * 60 * 1000); 
+            const PASS_DURATION_MS = (9 * 24 * 60 * 60 * 1000); // 9 днів
             let passSeasonEnd = localStorage.getItem('passSeasonEnd');
             if (!passSeasonEnd) { passSeasonEnd = Date.now() + PASS_DURATION_MS; localStorage.setItem('passSeasonEnd', passSeasonEnd.toString()); } else { passSeasonEnd = parseInt(passSeasonEnd); }
             const timerElement = document.getElementById('pass-timer-text'); if (!timerElement) return;
@@ -888,4 +881,3 @@
     </script>
 </body>
 </html>
-
