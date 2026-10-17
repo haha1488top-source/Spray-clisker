@@ -6,7 +6,7 @@
     <title>Spray Simulator - Sands of Time Edition</title>
     <link href="https://fonts.googleapis.com/css2?family=Lilita One&display=swap" rel="stylesheet">
     
-    <script src="minutes.js?v=6"></script>
+    <script src="minutes.js?v=7"></script>
     
     <style>
         :root {
@@ -412,21 +412,19 @@
         let isOpeningDrop = false; 
         let isOpeningBox = false;
 
-        // --- ДОДАВАННЯ +7 ДНІВ ДО ОБОХ СЕЗОНІВ ---
-        if (localStorage.getItem('add_extra_7_days_v1') !== 'true') {
+        // --- ПРИМУСОВИЙ ДОДАТКОВИЙ ПАТЧ НА +7 ДНІВ (v2) ---
+        if (localStorage.getItem('add_extra_7_days_v2') !== 'true') {
             const ADD_7_DAYS = 7 * 24 * 60 * 60 * 1000;
             
             let lEnd = localStorage.getItem('leagueSeasonEnd');
-            let currentLEnd = lEnd ? parseInt(lEnd) : Date.now();
-            localStorage.setItem('leagueSeasonEnd', (currentLEnd + ADD_7_DAYS).toString());
+            if (lEnd) localStorage.setItem('leagueSeasonEnd', (parseInt(lEnd) + ADD_7_DAYS).toString());
             
             let pEnd = localStorage.getItem('passSeasonEnd');
-            let currentPEnd = pEnd ? parseInt(pEnd) : Date.now();
-            localStorage.setItem('passSeasonEnd', (currentPEnd + ADD_7_DAYS).toString());
+            if (pEnd) localStorage.setItem('passSeasonEnd', (parseInt(pEnd) + ADD_7_DAYS).toString());
             
-            localStorage.setItem('add_extra_7_days_v1', 'true');
+            localStorage.setItem('add_extra_7_days_v2', 'true');
         }
-        // ----------------------------------------
+        // --------------------------------------------------
 
         class GameState {
             constructor() {
@@ -848,7 +846,7 @@
 
         function initLeagueTimer() {
             let seasonEnd = localStorage.getItem('leagueSeasonEnd');
-            if (!seasonEnd) { seasonEnd = Date.now() + (12 * 24 * 60 * 60 * 1000); localStorage.setItem('leagueSeasonEnd', seasonEnd.toString()); } else { seasonEnd = parseInt(seasonEnd); }
+            if (!seasonEnd) { seasonEnd = Date.now() + (19 * 24 * 60 * 60 * 1000); localStorage.setItem('leagueSeasonEnd', seasonEnd.toString()); } else { seasonEnd = parseInt(seasonEnd); }
             const timerElement = document.getElementById('league-timer-text');
             function updateTimer() {
                 const now = Date.now(); const diff = seasonEnd - now;
@@ -862,7 +860,7 @@
 
         function initPassTimer() {
             let passSeasonEnd = localStorage.getItem('passSeasonEnd');
-            if (!passSeasonEnd) { passSeasonEnd = Date.now() + (9 * 24 * 60 * 60 * 1000); localStorage.setItem('passSeasonEnd', passSeasonEnd.toString()); } else { passSeasonEnd = parseInt(passSeasonEnd); }
+            if (!passSeasonEnd) { passSeasonEnd = Date.now() + (16 * 24 * 60 * 60 * 1000); localStorage.setItem('passSeasonEnd', passSeasonEnd.toString()); } else { passSeasonEnd = parseInt(passSeasonEnd); }
             const timerElement = document.getElementById('pass-timer-text'); if (!timerElement) return;
             function updateTimer() {
                 const now = Date.now(); const diff = passSeasonEnd - now;
