@@ -135,6 +135,44 @@
         .decline-buy-bp { background: linear-gradient(180deg, #ef5350 0%, #c62828 100%); color: white; border: 3px solid black; padding: 10px; width: 100%; border-radius: 12px; font-family: 'Lilita One'; font-size: 16px; cursor: pointer; text-transform: uppercase; text-shadow: 1px 1px 0 black; margin-top: 15px; box-shadow: 0 6px 0 #7f0000; transition: 0.1s; position: relative; z-index: 1; }
         .decline-buy-bp:active { transform: translateY(3px); box-shadow: 0 3px 0 #7f0000; }
 
+        /* --- АНІМАЦІЯ АКТИВАЦІЇ SPRAY PASS PLUS --- */
+        #pass-activated-screen {
+            position: fixed; inset: 0; z-index: 8000; display: none;
+            flex-direction: column; align-items: center; justify-content: center;
+            background: radial-gradient(circle, #78350f 0%, #1c0a00 100%);
+            overflow: hidden;
+        }
+        .sunburst-rays {
+            position: absolute; width: 200vmax; height: 200vmax;
+            background: repeating-conic-gradient(from 0deg, rgba(255, 204, 0, 0.18) 0deg 15deg, transparent 15deg 30deg);
+            animation: spinRays 16s linear infinite; pointer-events: none; z-index: 0;
+        }
+        @keyframes spinRays { to { transform: rotate(360deg); } }
+        .pass-act-content {
+            position: relative; z-index: 2; text-align: center;
+            display: flex; flex-direction: column; align-items: center;
+            animation: passBurstIn 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+        }
+        @keyframes passBurstIn { 0% { transform: scale(0.2) rotate(-10deg); opacity: 0; } 100% { transform: scale(1) rotate(0deg); opacity: 1; } }
+        .pass-act-badge {
+            font-size: 36px; color: var(--bs-gold); text-transform: uppercase;
+            text-shadow: 4px 4px 0 #000, 0 0 30px rgba(255, 204, 0, 0.9);
+            margin-bottom: 10px; letter-spacing: 2px;
+        }
+        .pass-act-sub {
+            font-size: 20px; color: #fff; text-shadow: 2px 2px 0 #000;
+            margin-bottom: 25px; text-transform: uppercase;
+        }
+        .pass-act-icons {
+            display: flex; gap: 20px; align-items: center; justify-content: center; margin-bottom: 30px;
+        }
+        .pass-act-icons img {
+            width: 110px; filter: drop-shadow(0 0 20px var(--bs-gold));
+            animation: floatItem 2s ease-in-out infinite alternate;
+        }
+        .pass-act-icons img:nth-child(2) { animation-delay: 0.4s; }
+        @keyframes floatItem { from { transform: translateY(0px) scale(1); } to { transform: translateY(-12px) scale(1.08); } }
+
         .token-progress-container { width: 95%; max-width: 480px; height: 28px; background: #333; border: 2px solid black; border-radius: 20px; margin: 0 auto 15px; position: relative; overflow: hidden; }
         .token-bar { height: 100%; background: linear-gradient(90deg, #34d399, #10b981); width: 0%; transition: 0.3s; }
         .token-text { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; font-size: 13px; text-shadow: 1px 1px 0 black; }
@@ -175,13 +213,44 @@
         .selected-card { border-color: var(--bs-gold) !important; box-shadow: 0 0 15px var(--bs-gold); }
         .rarity-tag { position: absolute; bottom: -8px; font-size: 9px; padding: 2px 6px; border-radius: 8px; color: black; font-weight: bold; text-transform: uppercase; border: 1px solid black; }
 
-        #starr-drop-screen, #box-opening-screen, #spray-pack-screen { position: fixed; inset: 0; z-index: 4000; display: none; flex-direction: column; align-items: center; justify-content: center; }
-        #starr-drop-screen { background: radial-gradient(circle, #3a1a78 0%, #0a0314 100%); }
+        /* --- ОНОВЛЕНІ ЕКРАНИ STARR DROP ТА SPRAY PACK --- */
+        #starr-drop-screen, #box-opening-screen, #spray-pack-screen { position: fixed; inset: 0; z-index: 4000; display: none; flex-direction: column; align-items: center; justify-content: center; overflow: hidden; transition: background 0.35s ease; }
+        #starr-drop-screen { background: radial-gradient(circle, #166534 0%, #052e16 100%); }
         #box-opening-screen { background: rgba(0,0,0,0.95); z-index: 5000; }
         #spray-pack-screen { background: radial-gradient(circle, #f57300 0%, #3a0000 100%); }
         
-        .starr-drop-obj { width: 220px; cursor: pointer; }
-        .spray-pack-obj { width: 220px; cursor: pointer; filter: drop-shadow(0 0 20px #ffcc00); transition: transform 0.1s; }
+        .starr-drop-obj { width: 220px; cursor: pointer; position: relative; z-index: 2; transition: filter 0.3s, transform 0.1s; }
+        .starr-tap-anim { animation: starrTapHit 0.28s cubic-bezier(0.36, 0.07, 0.19, 0.97); }
+        @keyframes starrTapHit {
+            0% { transform: scale(1) rotate(0deg); }
+            30% { transform: scale(0.82) rotate(-8deg); }
+            65% { transform: scale(1.18) rotate(6deg); }
+            100% { transform: scale(1) rotate(0deg); }
+        }
+        .starr-upgrade-anim { animation: starrUpgradePop 0.45s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+        @keyframes starrUpgradePop {
+            0% { transform: scale(0.7); filter: brightness(2.5); }
+            50% { transform: scale(1.32) rotate(5deg); filter: brightness(1.8); }
+            100% { transform: scale(1) rotate(0deg); filter: brightness(1); }
+        }
+        .starr-rarity-banner {
+            font-size: 32px; text-transform: uppercase; text-shadow: 3px 3px 0 #000;
+            margin-bottom: 10px; position: relative; z-index: 2; letter-spacing: 1px;
+            transition: color 0.25s, transform 0.2s;
+        }
+        .starr-taps-hint {
+            font-size: 18px; color: #fff; text-shadow: 2px 2px 0 #000;
+            margin-top: 20px; position: relative; z-index: 2; letter-spacing: 1px;
+            background: rgba(0,0,0,0.5); padding: 6px 18px; border-radius: 20px; border: 2px solid rgba(255,255,255,0.3);
+        }
+        .reward-pop-anim { animation: rewardPopIn 0.45s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; position: relative; z-index: 2; }
+        @keyframes rewardPopIn {
+            0% { transform: scale(0.2) translateY(40px); opacity: 0; }
+            70% { transform: scale(1.1) translateY(-5px); opacity: 1; }
+            100% { transform: scale(1) translateY(0); opacity: 1; }
+        }
+
+        .spray-pack-obj { width: 220px; cursor: pointer; filter: drop-shadow(0 0 20px #ffcc00); transition: transform 0.1s; position: relative; z-index: 2; }
         .spray-pack-obj:active { transform: scale(0.9); }
         .big-box-img { width: 250px; cursor: pointer; filter: drop-shadow(0 0 20px #ffcc00); transition: 0.1s; }
 
@@ -191,11 +260,11 @@
             60% { transform: translate(-3px, 1px) rotate(0deg); } 70% { transform: translate(3px, 1px) rotate(-1deg); } 80% { transform: translate(-1px, -1px) rotate(1deg); }
             90% { transform: translate(1px, 2px) rotate(0deg); } 100% { transform: translate(1px, -2px) rotate(-1deg); }
         }
-        .shaking { animation: box-shake 0.4s infinite; }
-        .flash-white { position: fixed; inset: 0; background: white; z-index: 5001; display: none; opacity: 0; pointer-events: none; }
+        .shaking { animation: box-shake 0.3s infinite; }
+        .flash-white { position: fixed; inset: 0; background: white; z-index: 9000; display: none; opacity: 0; pointer-events: none; transition: opacity 0.25s ease-out; }
 
-        .back-btn { background: var(--bs-red); color: white; border: 3px solid black; padding: 8px 16px; border-radius: 10px; cursor: pointer; text-transform: uppercase; font-family: 'Lilita One'; }
-        .drop-counter-badge { position: absolute; top: 20px; right: 20px; background: rgba(0,0,0,0.8); border: 3px solid var(--bs-gold); padding: 8px 15px; border-radius: 12px; font-size: 20px; text-shadow: 1px 1px 0 black; color: white; display: none; }
+        .back-btn { background: var(--bs-red); color: white; border: 3px solid black; padding: 8px 16px; border-radius: 10px; cursor: pointer; text-transform: uppercase; font-family: 'Lilita One'; position: relative; z-index: 3; }
+        .drop-counter-badge { position: absolute; top: 20px; right: 20px; background: rgba(0,0,0,0.8); border: 3px solid var(--bs-gold); padding: 8px 15px; border-radius: 12px; font-size: 20px; text-shadow: 1px 1px 0 black; color: white; display: none; z-index: 5; }
     </style>
 </head>
 <body>
@@ -279,12 +348,24 @@
         </div>
     </div>
 
+    <!-- ЕКРАН АНІМАЦІЇ ПОКУПКИ SPRAY PASS PLUS -->
+    <div id="pass-activated-screen">
+        <div class="sunburst-rays"></div>
+        <div class="pass-act-content">
+            <div class="pass-act-badge">SPRAY PASS PLUS</div>
+            <div class="pass-act-sub">✨ АКТИВОВАНО! ✨</div>
+            <div class="pass-act-icons">
+                <img src="Img/player_icon_bp_sandsoftime.png">
+                <img src="Img/spray_bp_dark_sands.png">
+            </div>
+            <button class="play-btn-animated" style="font-size: 22px; padding: 12px 50px;" onclick="closePassActivatedScreen()">ПРОДОВЖИТИ</button>
+        </div>
+    </div>
+
     <!-- МАГАЗИН -->
     <div id="shop-screen">
         <div class="shop-header"><button class="back-btn" style="position:absolute; left:10px; top:12px;" onclick="showScreen('game-screen')">←</button><h2 style="text-shadow:2px 2px 0 black; text-transform:uppercase;">МАГАЗИН</h2></div>
         <div class="shop-grid">
-            
-            <!-- АКЦІЯ 20 БОКСІВ -->
             <div class="offer-banner mega-drop-offer" id="comp-box-offer" onclick="claimCompensationBoxes()">
                 <img src="Img/trophy_brawlbox.png" style="width:75%; filter: drop-shadow(0 0 10px #ffcc00);">
                 <div class="offer-label" id="comp-box-label" style="background: rgba(239, 68, 68, 0.8); font-weight: bold; color: yellow;">20x ТРОФЕЙНИХ</div>
@@ -292,7 +373,6 @@
                 <div style="font-size: 10px; color: yellow; text-shadow: 1px 1px 0 #000; margin-top: 4px; font-weight:bold; z-index:2;">АКЦІЯ 24 ГОДИНИ</div>
             </div>
 
-            <!-- ЩОДЕННИЙ ПОДАРУНОК -->
             <div class="offer-banner" id="daily-gift-offer" onclick="claimDailyGift()">
                 <img id="daily-gift-img" src="Img/coin.png" style="width:65%;">
                 <div class="offer-label" id="daily-gift-timer-label">ПОДАРУНОК</div>
@@ -324,21 +404,37 @@
         </div>
     </div>
 
+    <!-- ОНОВЛЕНИЙ ЕКРАН STARR DROP -->
     <div id="starr-drop-screen">
+        <div class="sunburst-rays" id="starr-rays"></div>
         <div class="drop-counter-badge" id="drop-counter-display">ЗАЛИШИЛОСЬ: 10</div>
-        <h2 style="margin-bottom:30px; text-shadow: 2px 2px 0 black;">STARR DROP</h2><img src="Img/image71.png" class="starr-drop-obj" id="starr-drop-img" onclick="triggerStarrDrop()">
-        <div id="drop-reward" style="display:none; text-align:center;">
-            <div style="border:4px solid white; padding:20px; border-radius:20px; background:rgba(255,255,255,0.1);" id="drop-border"><img id="drop-res-img" src="" style="width:110px;"></div>
-            <h3 id="drop-res-rarity" style="margin-top:15px; text-transform:uppercase;"></h3><button class="back-btn" style="margin-top:30px;" onclick="handleStarrDropConfirmClick()">ОК</button>
+        <h2 class="starr-rarity-banner" id="starr-rarity-title">РІДКІСНИЙ</h2>
+        <img src="Img/image71.png" class="starr-drop-obj" id="starr-drop-img" onclick="tapStarrDrop()">
+        <div class="starr-taps-hint" id="starr-taps-hint">НАТИСНИ: 4</div>
+        
+        <div id="drop-reward" class="reward-pop-anim" style="display:none; text-align:center;">
+            <div style="border:5px solid white; padding:25px; border-radius:25px; background:rgba(0,0,0,0.45); box-shadow: 0 0 30px rgba(255,255,255,0.3);" id="drop-border">
+                <img id="drop-res-img" src="" style="width:120px; filter: drop-shadow(0 5px 10px rgba(0,0,0,0.6));">
+            </div>
+            <h2 id="drop-res-amount" style="margin-top:15px; font-size:32px; color:#fff; text-shadow:3px 3px 0 #000;"></h2>
+            <h3 id="drop-res-rarity" style="margin-top:5px; text-transform:uppercase; font-size:20px; text-shadow:2px 2px 0 #000;"></h3>
+            <button class="back-btn" style="margin-top:25px; padding:12px 40px; font-size:20px;" onclick="handleStarrDropConfirmClick()">ОК</button>
         </div>
         <button class="back-btn" style="position:absolute; bottom:20px;" id="close-starr-btn" onclick="closeStarrDrop()">ЗАКРИТИ</button>
     </div>
 
+    <!-- ОНОВЛЕНИЙ ЕКРАН SPRAY PACK -->
     <div id="spray-pack-screen">
-        <h2 style="margin-bottom:30px; text-shadow: 2px 2px 0 black;">НАБІР СПРЕЇВ</h2><img src="Img/spraypack.png" class="spray-pack-obj" id="spray-pack-img" onclick="triggerSprayPack()">
-        <div id="pack-reward" style="display:none; text-align:center;">
-            <div style="border:4px solid white; padding:20px; border-radius:20px; background:rgba(0,0,0,0.5);" id="pack-border"><img id="pack-res-img" src="" style="width:110px;"></div>
-            <h3 id="pack-res-rarity" style="margin-top:15px; text-transform:uppercase;"></h3><button class="back-btn" style="margin-top:30px;" onclick="closeSprayPack()">ОК</button>
+        <div class="sunburst-rays" id="pack-rays" style="display:none;"></div>
+        <h2 style="margin-bottom:30px; text-shadow: 3px 3px 0 black; position:relative; z-index:2; font-size:30px;">НАБІР СПРЕЇВ</h2>
+        <img src="Img/spraypack.png" class="spray-pack-obj" id="spray-pack-img" onclick="triggerSprayPack()">
+        <div id="pack-reward" class="reward-pop-anim" style="display:none; text-align:center;">
+            <div style="border:5px solid white; padding:25px; border-radius:25px; background:rgba(0,0,0,0.55); box-shadow: 0 0 35px rgba(255,204,0,0.5);" id="pack-border">
+                <img id="pack-res-img" src="" style="width:120px; filter: drop-shadow(0 5px 10px rgba(0,0,0,0.6));">
+            </div>
+            <h2 id="pack-res-amount" style="margin-top:15px; font-size:28px; color:#fff; text-shadow:2px 2px 0 #000;"></h2>
+            <h3 id="pack-res-rarity" style="margin-top:5px; text-transform:uppercase; font-size:20px; text-shadow:2px 2px 0 #000;"></h3>
+            <button class="back-btn" style="margin-top:25px; padding:12px 40px; font-size:20px;" onclick="closeSprayPack()">ОК</button>
         </div>
     </div>
 
@@ -411,6 +507,18 @@
         let remainingBoxesQueue = 0;
         let isOpeningDrop = false; 
         let isOpeningBox = false;
+        let isOpeningPack = false;
+
+        // --- РІДКОСТІ STARR DROP ЯК В ОРИГІНАЛІ ---
+        const starrRarities = [
+            { name: 'РІДКІСНИЙ', color: '#4ade80', bg: 'radial-gradient(circle, #166534 0%, #052e16 100%)', upgradeChance: 0.45 },
+            { name: 'НАДРІДКІСНИЙ', color: '#3b82f6', bg: 'radial-gradient(circle, #1d4ed8 0%, #0f172a 100%)', upgradeChance: 0.35 },
+            { name: 'ЕПІЧНИЙ', color: '#c084fc', bg: 'radial-gradient(circle, #7e22ce 0%, #2e1065 100%)', upgradeChance: 0.25 },
+            { name: 'МІФІЧНИЙ', color: '#ef4444', bg: 'radial-gradient(circle, #b91c1c 0%, #450a0a 100%)', upgradeChance: 0.15 },
+            { name: 'ЛЕГЕНДАРНИЙ', color: '#ffcc00', bg: 'radial-gradient(circle, #ca8a04 0%, #422006 100%)', upgradeChance: 0 }
+        ];
+        let currentStarrRarityIdx = 0;
+        let starrTapsLeft = 4;
 
         // --- ПРИМУСОВИЙ ПАТЧ: +7 ДНІВ ДЛЯ ПАСУ ТА +10 ДНІВ ДЛЯ ЛІГИ (v3) ---
         if (localStorage.getItem('add_extra_7_10_days_v3') !== 'true') {
@@ -425,7 +533,16 @@
             
             localStorage.setItem('add_extra_7_10_days_v3', 'true');
         }
-        // -------------------------------------------------------------------
+
+        function triggerFlash(duration = 250) {
+            const flash = document.getElementById('screen-flash');
+            flash.style.display = 'block';
+            flash.style.opacity = '1';
+            setTimeout(() => {
+                flash.style.opacity = '0';
+                setTimeout(() => { flash.style.display = 'none'; }, duration);
+            }, 80);
+        }
 
         class GameState {
             constructor() {
@@ -452,7 +569,7 @@
         function updateUI() { state.notify(); checkShopTimer(); checkCompensationStatus(); checkAndGenerateDailyGift(); }
 
         class RewardFactory {
-            static generateLoot(type) {
+            static generateLoot(type, rarityIdx = 0) {
                 switch(type) {
                     case 'box':
                         const boxRewards = [
@@ -464,21 +581,59 @@
                         return { type: r.n, img: r.i, amount: Math.floor(Math.random()*(r.max-r.min+1))+r.min, isSpray: false };
                     
                     case 'starrDrop':
-                        const isResource = Math.random() < 0.60;
+                        const rarityObj = starrRarities[rarityIdx];
                         const lockedPool = spraysData.filter(s => s.locked && !s.isLeague && !s.packExclusive && !s.passExclusive);
-                        if (!isResource && lockedPool.length > 0) {
-                            return { type: 'spray', obj: lockedPool[Math.floor(Math.random() * lockedPool.length)], isSpray: true };
-                        } else {
-                            const resChance = Math.random();
-                            if (resChance < 0.6) return { type: 'coins', amount: Math.floor(Math.random() * 150) + 50, isSpray: false, fallbackRarity: 'Монети', fallbackColor: '#ffcc00', fallbackImg: 'Img/coin.png' };
-                            else if (resChance < 0.9) return { type: 'blings', amount: Math.floor(Math.random() * 30) + 10, isSpray: false, fallbackRarity: 'Блінги', fallbackColor: '#ffcc00', fallbackImg: 'Img/icon_bling.png' };
-                            else return { type: 'gems', amount: Math.floor(Math.random() * 5) + 1, isSpray: false, fallbackRarity: 'Геми', fallbackColor: '#4ade80', fallbackImg: 'Img/image1194.png' };
+                        
+                        // Нагороди залежно від прокачаної рідкості (без бравлерів)
+                        if (rarityIdx === 0) { // РІДКІСНИЙ
+                            const roll = Math.random();
+                            if (roll < 0.55) return { type: 'coins', amount: 50, isSpray: false, label: '+50 МОНЕТ', fallbackRarity: rarityObj.name, fallbackColor: rarityObj.color, fallbackImg: 'Img/coin.png' };
+                            if (roll < 0.85) return { type: 'blings', amount: 15, isSpray: false, label: '+15 БЛІНГІВ', fallbackRarity: rarityObj.name, fallbackColor: rarityObj.color, fallbackImg: 'Img/icon_bling.png' };
+                            return { type: 'tokens', amount: 50, isSpray: false, label: '+50 ТОКЕНІВ ПАСУ', fallbackRarity: rarityObj.name, fallbackColor: rarityObj.color, fallbackImg: 'Img/player_icon_bp_sandsoftime.png' };
                         }
+                        if (rarityIdx === 1) { // НАДРІДКІСНИЙ
+                            const rareSprays = lockedPool.filter(s => s.rarity === 'Рідкісний');
+                            if (Math.random() < 0.25 && rareSprays.length > 0) {
+                                return { type: 'spray', obj: rareSprays[Math.floor(Math.random() * rareSprays.length)], isSpray: true, label: 'НОВИЙ СПРЕЙ!' };
+                            }
+                            const roll = Math.random();
+                            if (roll < 0.5) return { type: 'coins', amount: 120, isSpray: false, label: '+120 МОНЕТ', fallbackRarity: rarityObj.name, fallbackColor: rarityObj.color, fallbackImg: 'Img/coin.png' };
+                            if (roll < 0.85) return { type: 'blings', amount: 35, isSpray: false, label: '+35 БЛІНГІВ', fallbackRarity: rarityObj.name, fallbackColor: rarityObj.color, fallbackImg: 'Img/icon_bling.png' };
+                            return { type: 'gems', amount: 2, isSpray: false, label: '+2 ГЕМИ', fallbackRarity: rarityObj.name, fallbackColor: rarityObj.color, fallbackImg: 'Img/image1194.png' };
+                        }
+                        if (rarityIdx === 2) { // ЕПІЧНИЙ
+                            const epicSprays = lockedPool.filter(s => s.rarity === 'Епічний' || s.rarity === 'Рідкісний');
+                            if (Math.random() < 0.45 && epicSprays.length > 0) {
+                                return { type: 'spray', obj: epicSprays[Math.floor(Math.random() * epicSprays.length)], isSpray: true, label: 'НОВИЙ СПРЕЙ!' };
+                            }
+                            const roll = Math.random();
+                            if (roll < 0.45) return { type: 'coins', amount: 250, isSpray: false, label: '+250 МОНЕТ', fallbackRarity: rarityObj.name, fallbackColor: rarityObj.color, fallbackImg: 'Img/coin.png' };
+                            if (roll < 0.80) return { type: 'blings', amount: 75, isSpray: false, label: '+75 БЛІНГІВ', fallbackRarity: rarityObj.name, fallbackColor: rarityObj.color, fallbackImg: 'Img/icon_bling.png' };
+                            return { type: 'gems', amount: 5, isSpray: false, label: '+5 ГЕМІВ', fallbackRarity: rarityObj.name, fallbackColor: rarityObj.color, fallbackImg: 'Img/image1194.png' };
+                        }
+                        if (rarityIdx === 3) { // МІФІЧНИЙ
+                            const mythicSprays = lockedPool.filter(s => s.rarity === 'Міфічний' || s.rarity === 'Епічний');
+                            if (Math.random() < 0.65 && mythicSprays.length > 0) {
+                                return { type: 'spray', obj: mythicSprays[Math.floor(Math.random() * mythicSprays.length)], isSpray: true, label: 'НОВИЙ СПРЕЙ!' };
+                            }
+                            const roll = Math.random();
+                            if (roll < 0.45) return { type: 'coins', amount: 500, isSpray: false, label: '+500 МОНЕТ', fallbackRarity: rarityObj.name, fallbackColor: rarityObj.color, fallbackImg: 'Img/coin.png' };
+                            if (roll < 0.75) return { type: 'blings', amount: 150, isSpray: false, label: '+150 БЛІНГІВ', fallbackRarity: rarityObj.name, fallbackColor: rarityObj.color, fallbackImg: 'Img/icon_bling.png' };
+                            return { type: 'gems', amount: 12, isSpray: false, label: '+12 ГЕМІВ', fallbackRarity: rarityObj.name, fallbackColor: rarityObj.color, fallbackImg: 'Img/image1194.png' };
+                        }
+                        // ЛЕГЕНДАРНИЙ (rarityIdx === 4)
+                        const legSprays = lockedPool.filter(s => s.rarity === 'Легендарний');
+                        const anySprays = legSprays.length > 0 ? legSprays : lockedPool;
+                        if (Math.random() < 0.80 && anySprays.length > 0) {
+                            return { type: 'spray', obj: anySprays[Math.floor(Math.random() * anySprays.length)], isSpray: true, label: 'ЛЕГЕНДАРНИЙ СПРЕЙ!' };
+                        }
+                        if (Math.random() < 0.5) return { type: 'gems', amount: 25, isSpray: false, label: '+25 ГЕМІВ', fallbackRarity: rarityObj.name, fallbackColor: rarityObj.color, fallbackImg: 'Img/image1194.png' };
+                        return { type: 'coins', amount: 1000, isSpray: false, label: '+1000 МОНЕТ', fallbackRarity: rarityObj.name, fallbackColor: rarityObj.color, fallbackImg: 'Img/coin.png' };
                     
                     case 'sprayPack':
                         let lockedPack = spraysData.filter(s => s.locked && s.packExclusive);
-                        if(lockedPack.length > 0) return { type: 'spray', obj: lockedPack[Math.floor(Math.random() * lockedPack.length)], isSpray: true };
-                        return { type: 'blings', amount: 50, isSpray: false, fallbackRarity: 'Компенсація', fallbackColor: '#ffcc00', fallbackImg: 'Img/icon_bling.png' };
+                        if(lockedPack.length > 0) return { type: 'spray', obj: lockedPack[Math.floor(Math.random() * lockedPack.length)], isSpray: true, label: 'ЕКСКЛЮЗИВНИЙ СПРЕЙ!' };
+                        return { type: 'blings', amount: 50, isSpray: false, label: '+50 БЛІНГІВ', fallbackRarity: 'Компенсація', fallbackColor: '#ffcc00', fallbackImg: 'Img/icon_bling.png' };
                 }
             }
         }
@@ -580,7 +735,20 @@
 
         function showPassPurchasePopup() { if(state.get('passPlusOwned')) return; document.getElementById('pass-purchase-overlay').style.display = 'flex'; }
         function closePassPurchasePopup() { document.getElementById('pass-purchase-overlay').style.display = 'none'; }
-        function confirmPassPurchase() { if(state.get('gems') >= 139) { state.add('gems', -139); state.set('passPlusOwned', true); renderPass(); closePassPurchasePopup(); } else alert("Мало гемів!"); }
+        
+        function confirmPassPurchase() {
+            if(state.get('gems') >= 139) {
+                state.add('gems', -139);
+                state.set('passPlusOwned', true);
+                renderPass();
+                closePassPurchasePopup();
+                triggerFlash(300);
+                document.getElementById('pass-activated-screen').style.display = 'flex';
+            } else alert("Мало гемів!");
+        }
+        function closePassActivatedScreen() {
+            document.getElementById('pass-activated-screen').style.display = 'none';
+        }
         
         function updateQuest(id, amt = 1) {
             let q = quests.find(x => x.id === id);
@@ -667,13 +835,10 @@
             isOpeningBox = true;
             const box = document.getElementById('box-anim'); box.classList.add('shaking'); 
             setTimeout(() => {
-                const flash = document.getElementById('screen-flash'); flash.style.display = 'block'; flash.style.opacity = '1';
+                triggerFlash(250);
                 setTimeout(() => {
-                    flash.style.opacity = '0'; setTimeout(() => flash.style.display = 'none', 300);
-                    
                     const loot = RewardFactory.generateLoot('box');
                     state.add(loot.type, loot.amount);
-                    
                     box.style.display = 'none';
                     document.getElementById('box-res-img').src = loot.img;
                     document.getElementById('box-res-amt').textContent = `+${loot.amount}`;
@@ -698,35 +863,108 @@
                 document.getElementById('box-counter-display').style.display = 'none';
             }
         }
-        // ----------------------------------------------
+
+        // --- ОНОВЛЕНА МЕХАНІКА STARR DROP З ПРОКАЧУВАННЯМ РІДКОСТІ ---
+        function resetStarrDropVisual() {
+            currentStarrRarityIdx = 0;
+            starrTapsLeft = 4;
+            isOpeningDrop = false;
+            updateStarrDropVisual();
+            document.getElementById('starr-drop-img').style.display = 'block';
+            document.getElementById('starr-taps-hint').style.display = 'block';
+            document.getElementById('starr-rarity-title').style.display = 'block';
+            document.getElementById('drop-reward').style.display = 'none';
+        }
+
+        function updateStarrDropVisual() {
+            const r = starrRarities[currentStarrRarityIdx];
+            const screen = document.getElementById('starr-drop-screen');
+            const title = document.getElementById('starr-rarity-title');
+            const img = document.getElementById('starr-drop-img');
+            const hint = document.getElementById('starr-taps-hint');
+
+            screen.style.background = r.bg;
+            title.textContent = r.name;
+            title.style.color = r.color;
+            img.style.filter = `drop-shadow(0 0 28px ${r.color})`;
+            hint.textContent = starrTapsLeft > 0 ? `НАТИСНИ: ${starrTapsLeft}` : 'ВІДКРИТИ!';
+        }
 
         function openStarrDrop(count = 1) { 
             remainingDropsQueue = count;
             const badge = document.getElementById('drop-counter-display');
             if (remainingDropsQueue > 1) { badge.style.display = 'block'; badge.textContent = `ЗАЛИШИЛОСЬ: ${remainingDropsQueue}`; } else { badge.style.display = 'none'; }
-            document.getElementById('starr-drop-screen').style.display = 'flex'; 
-            document.getElementById('starr-drop-img').style.display = 'block'; 
-            document.getElementById('close-starr-btn').style.display = (remainingDropsQueue > 1) ? 'none' : 'block'; 
-            document.getElementById('drop-reward').style.display = 'none'; 
+            document.getElementById('starr-drop-screen').style.display = 'flex';
+            document.getElementById('close-starr-btn').style.display = (remainingDropsQueue > 1) ? 'none' : 'block';
+            resetStarrDropVisual();
         }
         
-        function triggerStarrDrop() {
-            if (isOpeningDrop) return; isOpeningDrop = true;
-            updateQuest(3); const loot = RewardFactory.generateLoot('starrDrop');
-            if(loot.isSpray) { loot.obj.locked = false; localStorage.setItem(`spray_locked_${loot.obj.id}`, 'false'); } else state.add(loot.type, loot.amount);
-            document.getElementById('starr-drop-img').style.display = 'none'; document.getElementById('close-starr-btn').style.display = 'none'; 
-            document.getElementById('drop-res-img').src = loot.isSpray ? loot.obj.img : loot.fallbackImg; document.getElementById('drop-res-rarity').textContent = loot.isSpray ? loot.obj.rarity : loot.fallbackRarity;
-            document.getElementById('drop-border').style.borderColor = loot.isSpray ? loot.obj.color : loot.fallbackColor; document.getElementById('drop-reward').style.display = 'block'; 
+        function tapStarrDrop() {
+            if (isOpeningDrop) return;
+            const img = document.getElementById('starr-drop-img');
+            
+            if (starrTapsLeft > 0) {
+                starrTapsLeft--;
+                let upgraded = false;
+                const currentR = starrRarities[currentStarrRarityIdx];
+                if (currentStarrRarityIdx < starrRarities.length - 1 && Math.random() < currentR.upgradeChance) {
+                    currentStarrRarityIdx++;
+                    upgraded = true;
+                }
+                
+                img.classList.remove('starr-tap-anim', 'starr-upgrade-anim');
+                void img.offsetWidth; // перезапуск CSS-анімації
+                img.classList.add(upgraded ? 'starr-upgrade-anim' : 'starr-tap-anim');
+                updateStarrDropVisual();
+            } else {
+                // Фінальне відкриття
+                isOpeningDrop = true;
+                updateQuest(3);
+                triggerFlash(250);
+                
+                setTimeout(() => {
+                    const loot = RewardFactory.generateLoot('starrDrop', currentStarrRarityIdx);
+                    if (loot.isSpray) {
+                        loot.obj.locked = false;
+                        localStorage.setItem(`spray_locked_${loot.obj.id}`, 'false');
+                    } else {
+                        state.add(loot.type, loot.amount);
+                    }
+                    
+                    const r = starrRarities[currentStarrRarityIdx];
+                    document.getElementById('starr-drop-img').style.display = 'none';
+                    document.getElementById('starr-taps-hint').style.display = 'none';
+                    document.getElementById('close-starr-btn').style.display = 'none';
+                    
+                    document.getElementById('drop-res-img').src = loot.isSpray ? loot.obj.img : loot.fallbackImg;
+                    document.getElementById('drop-res-amount').textContent = loot.label;
+                    document.getElementById('drop-res-rarity').textContent = loot.isSpray ? loot.obj.rarity : r.name;
+                    document.getElementById('drop-res-rarity').style.color = loot.isSpray ? loot.obj.color : r.color;
+                    document.getElementById('drop-border').style.borderColor = loot.isSpray ? loot.obj.color : r.color;
+                    document.getElementById('drop-border').style.boxShadow = `0 0 35px ${loot.isSpray ? loot.obj.color : r.color}`;
+                    
+                    const rewardBox = document.getElementById('drop-reward');
+                    rewardBox.style.display = 'block';
+                }, 90);
+            }
         }
 
         function handleStarrDropConfirmClick() {
-            isOpeningDrop = false; 
             if (remainingDropsQueue > 1) {
-                remainingDropsQueue--; const badge = document.getElementById('drop-counter-display'); badge.textContent = `ЗАЛИШИЛОСЬ: ${remainingDropsQueue}`;
-                document.getElementById('drop-reward').style.display = 'none'; document.getElementById('starr-drop-img').style.display = 'block';
-            } else { remainingDropsQueue = 0; closeStarrDrop(); }
+                remainingDropsQueue--;
+                const badge = document.getElementById('drop-counter-display');
+                badge.textContent = `ЗАЛИШИЛОСЬ: ${remainingDropsQueue}`;
+                resetStarrDropVisual();
+            } else {
+                remainingDropsQueue = 0;
+                closeStarrDrop();
+            }
         }
-        function closeStarrDrop() { document.getElementById('starr-drop-screen').style.display = 'none'; document.getElementById('drop-counter-display').style.display = 'none'; }
+        function closeStarrDrop() {
+            isOpeningDrop = false;
+            document.getElementById('starr-drop-screen').style.display = 'none';
+            document.getElementById('drop-counter-display').style.display = 'none';
+        }
 
         // --- АКЦІЯ 20 ТРОФЕЙНИХ БОКСІВ ---
         function claimCompensationBoxes() {
@@ -790,7 +1028,7 @@
             if (claimed) {
                 banner.classList.add('claimed-offer'); btn.style.display = 'none';
                 let diff = resetTime - now;
-                let h = Math.floor(diff / 3600000); let m = Math.floor((diff % 3600000) / 60000); let s = Math.floor((diff % 60000) / 1000);
+                let h = Math.floor(diff / 3600000); let m = Math.floor((diff % 3600000) / 60000);
                 label.textContent = `ОНОВЛЕННЯ: ${h}г ${m}хв`; label.style.background = "rgba(0,0,0,0.5)"; label.style.color = "#aaa";
             } else {
                 banner.classList.remove('claimed-offer'); btn.style.display = 'flex';
@@ -807,14 +1045,45 @@
             else { state.add(gift.id, gift.amt); alert(`Отримано: ${gift.name}`); }
             updateDailyGiftUI();
         }
-        // ---------------------------------
 
-        function openSprayPack() { document.getElementById('spray-pack-screen').style.display = 'flex'; document.getElementById('spray-pack-img').style.display = 'block'; document.getElementById('pack-reward').style.display = 'none'; }
+        // --- ОНОВЛЕНА АНІМАЦІЯ SPRAY PACK ---
+        function openSprayPack() {
+            isOpeningPack = false;
+            document.getElementById('spray-pack-screen').style.display = 'flex';
+            const packImg = document.getElementById('spray-pack-img');
+            packImg.style.display = 'block';
+            packImg.classList.remove('shaking');
+            document.getElementById('pack-rays').style.display = 'none';
+            document.getElementById('pack-reward').style.display = 'none';
+        }
         function triggerSprayPack() {
-            const loot = RewardFactory.generateLoot('sprayPack');
-            if(loot.isSpray) { loot.obj.locked = false; localStorage.setItem(`spray_locked_${loot.obj.id}`, 'false'); } else state.add(loot.type, loot.amount);
-            document.getElementById('spray-pack-img').style.display = 'none'; document.getElementById('pack-res-img').src = loot.isSpray ? loot.obj.img : loot.fallbackImg; document.getElementById('pack-res-rarity').textContent = loot.isSpray ? loot.obj.rarity : loot.fallbackRarity;
-            document.getElementById('pack-border').style.borderColor = loot.isSpray ? loot.obj.color : loot.fallbackColor; document.getElementById('pack-reward').style.display = 'block'; 
+            if (isOpeningPack) return;
+            isOpeningPack = true;
+            const packImg = document.getElementById('spray-pack-img');
+            packImg.classList.add('shaking');
+            
+            setTimeout(() => {
+                triggerFlash(250);
+                setTimeout(() => {
+                    const loot = RewardFactory.generateLoot('sprayPack');
+                    if(loot.isSpray) { loot.obj.locked = false; localStorage.setItem(`spray_locked_${loot.obj.id}`, 'false'); }
+                    else state.add(loot.type, loot.amount);
+                    
+                    packImg.classList.remove('shaking');
+                    packImg.style.display = 'none';
+                    document.getElementById('pack-rays').style.display = 'block';
+                    
+                    const col = loot.isSpray ? loot.obj.color : loot.fallbackColor;
+                    document.getElementById('pack-res-img').src = loot.isSpray ? loot.obj.img : loot.fallbackImg;
+                    document.getElementById('pack-res-amount').textContent = loot.label;
+                    document.getElementById('pack-res-rarity').textContent = loot.isSpray ? loot.obj.rarity : loot.fallbackRarity;
+                    document.getElementById('pack-res-rarity').style.color = col;
+                    document.getElementById('pack-border').style.borderColor = col;
+                    document.getElementById('pack-border').style.boxShadow = `0 0 35px ${col}`;
+                    document.getElementById('pack-reward').style.display = 'block';
+                    isOpeningPack = false;
+                }, 90);
+            }, 550);
         }
         function closeSprayPack() { document.getElementById('spray-pack-screen').style.display = 'none'; }
 
@@ -825,7 +1094,7 @@
                 if (elapsed < 3600000) { const rem = 3600000 - elapsed; label.textContent = `${Math.floor(rem/60000)}:${Math.floor((rem%60000)/1000).toString().padStart(2,'0')}`; banner.classList.add('claimed-offer'); btn.style.display = 'none';
                 } else { label.textContent = "БЕЗКОШТОВНО"; banner.classList.remove('claimed-offer'); btn.style.display = 'block'; }
             }
-            checkAndGenerateDailyGift(); // Оновлюємо таймер щоденного подарунку
+            checkAndGenerateDailyGift();
         }
         
         function buyOffer(type, price, amount) { if (state.get('gems') >= price) { state.add('gems', -price); state.add(type, amount); } else alert("Мало гемів!"); }
@@ -847,7 +1116,6 @@
 
         function initLeagueTimer() {
             let seasonEnd = localStorage.getItem('leagueSeasonEnd');
-            // Базове значення збільшено з 19 до 29 днів (+10 днів)
             if (!seasonEnd) { seasonEnd = Date.now() + (29 * 24 * 60 * 60 * 1000); localStorage.setItem('leagueSeasonEnd', seasonEnd.toString()); } else { seasonEnd = parseInt(seasonEnd); }
             const timerElement = document.getElementById('league-timer-text');
             function updateTimer() {
@@ -862,7 +1130,6 @@
 
         function initPassTimer() {
             let passSeasonEnd = localStorage.getItem('passSeasonEnd');
-            // Базове значення збільшено з 16 до 23 днів (+7 днів)
             if (!passSeasonEnd) { passSeasonEnd = Date.now() + (23 * 24 * 60 * 60 * 1000); localStorage.setItem('passSeasonEnd', passSeasonEnd.toString()); } else { passSeasonEnd = parseInt(passSeasonEnd); }
             const timerElement = document.getElementById('pass-timer-text'); if (!timerElement) return;
             function updateTimer() {
